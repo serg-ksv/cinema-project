@@ -8,6 +8,7 @@ import mate.academy.cinema.lib.Dao;
 import mate.academy.cinema.model.Movie;
 import mate.academy.cinema.util.HibernateUtil;
 import org.apache.log4j.Logger;
+import org.hibernate.Session;
 import org.hibernate.Transaction;
 
 @Dao
@@ -17,18 +18,23 @@ public class MovieDaoImpl implements MovieDao {
     @Override
     public Movie add(Movie movie) {
         Transaction transaction = null;
-        try (var session = HibernateUtil.getSessionFactory().openSession()) {
+        Session session = null;
+        try {
+            session = HibernateUtil.getSessionFactory().openSession();
             transaction = session.beginTransaction();
-            var movieId = (Long) session.save(movie);
+            session.save(movie);
             transaction.commit();
             LOGGER.info("Movie '" + movie.getTitle() + "' was successfully added.");
-            movie.setId(movieId);
             return movie;
         } catch (Exception e) {
             if (transaction != null) {
                 transaction.rollback();
             }
             throw new DataProcessingException("Can't insert movie entity", e);
+        } finally {
+            if (session != null) {
+                session.close();
+            }
         }
     }
 
