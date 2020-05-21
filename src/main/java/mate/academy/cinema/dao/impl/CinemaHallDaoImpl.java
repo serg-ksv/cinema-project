@@ -1,36 +1,36 @@
 package mate.academy.cinema.dao.impl;
 
 import java.util.List;
-import javax.persistence.criteria.CriteriaQuery;
-import mate.academy.cinema.dao.MovieDao;
+import mate.academy.cinema.dao.CinemaHallDao;
 import mate.academy.cinema.exceptions.DataProcessingException;
 import mate.academy.cinema.lib.Dao;
-import mate.academy.cinema.model.Movie;
+import mate.academy.cinema.model.CinemaHall;
 import mate.academy.cinema.util.HibernateUtil;
 import org.apache.log4j.Logger;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 
 @Dao
-public class MovieDaoImpl implements MovieDao {
-    private static final Logger LOGGER = Logger.getLogger(MovieDaoImpl.class);
+public class CinemaHallDaoImpl implements CinemaHallDao {
+    private static final Logger LOGGER = Logger.getLogger(CinemaHallDaoImpl.class);
 
     @Override
-    public Movie add(Movie movie) {
+    public CinemaHall add(CinemaHall cinemaHall) {
         Transaction transaction = null;
         Session session = null;
         try {
             session = HibernateUtil.getSessionFactory().openSession();
             transaction = session.beginTransaction();
-            session.save(movie);
+            session.save(cinemaHall);
             transaction.commit();
-            LOGGER.info("Movie '" + movie.getTitle() + "' was successfully added.");
-            return movie;
+            LOGGER.info("Cinema hall '" + cinemaHall.getDescription()
+                    + "' was successfully added.");
+            return cinemaHall;
         } catch (Exception e) {
             if (transaction != null) {
                 transaction.rollback();
             }
-            throw new DataProcessingException("Can't insert movie entity", e);
+            throw new DataProcessingException("Can't insert cinema hall", e);
         } finally {
             if (session != null) {
                 session.close();
@@ -39,14 +39,14 @@ public class MovieDaoImpl implements MovieDao {
     }
 
     @Override
-    public List<Movie> getAll() {
+    public List<CinemaHall> getAll() {
         try (var session = HibernateUtil.getSessionFactory().openSession()) {
-            CriteriaQuery<Movie> criteriaQuery = session.getCriteriaBuilder()
-                    .createQuery(Movie.class);
-            criteriaQuery.from(Movie.class);
+            var criteriaQuery = session.getCriteriaBuilder()
+                    .createQuery(CinemaHall.class);
+            criteriaQuery.from(CinemaHall.class);
             return session.createQuery(criteriaQuery).getResultList();
         } catch (Exception e) {
-            throw new DataProcessingException("Error retrieving all movies. ", e);
+            throw new DataProcessingException("Error retrieving all cinema halls", e);
         }
     }
 }

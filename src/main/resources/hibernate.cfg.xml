@@ -13,5 +13,7 @@
         <property name="hbm2ddl.auto">create-drop</property>
 
         <mapping class="mate.academy.cinema.model.Movie"/>
+        <mapping class="mate.academy.cinema.model.CinemaHall"/>
+        <mapping class="mate.academy.cinema.model.MovieSession"/>
     </session-factory>
 </hibernate-configuration>
