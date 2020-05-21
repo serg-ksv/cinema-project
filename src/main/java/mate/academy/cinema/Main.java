@@ -35,7 +35,7 @@ public class Main {
         var movieSessionService = (MovieSessionService)
                 INJECTOR.getInstance(MovieSessionService.class);
         movieSessionService.add(movieSession);
-        movieSessionService.findAvailableSessions(1L, LocalDate.now())
+        movieSessionService.findAvailableSessions(movie.getId(), LocalDate.now())
                 .forEach(System.out::println);
     }
 }
