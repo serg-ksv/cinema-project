@@ -3,10 +3,13 @@ package mate.academy.cinema;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import mate.academy.cinema.exceptions.AuthenticationException;
 import mate.academy.cinema.lib.Injector;
 import mate.academy.cinema.model.CinemaHall;
 import mate.academy.cinema.model.Movie;
 import mate.academy.cinema.model.MovieSession;
+import mate.academy.cinema.model.User;
+import mate.academy.cinema.security.AuthenticationService;
 import mate.academy.cinema.service.CinemaHallService;
 import mate.academy.cinema.service.MovieService;
 import mate.academy.cinema.service.MovieSessionService;
@@ -17,14 +20,16 @@ public class Main {
     public static void main(String[] args) {
         var movie = new Movie();
         movie.setTitle("Fast and Furious");
-        var movieService = (MovieService) INJECTOR.getInstance(MovieService.class);
+        var movieService = (MovieService)
+                INJECTOR.getInstance(MovieService.class);
         movieService.add(movie);
         movieService.getAll().forEach(System.out::println);
 
         var cinemaHall = new CinemaHall();
         cinemaHall.setCapacity(50);
         cinemaHall.setDescription("some hall");
-        var cinemaHallService = (CinemaHallService) INJECTOR.getInstance(CinemaHallService.class);
+        var cinemaHallService = (CinemaHallService)
+                INJECTOR.getInstance(CinemaHallService.class);
         cinemaHallService.add(cinemaHall);
         cinemaHallService.getAll().forEach(System.out::println);
 
@@ -37,5 +42,17 @@ public class Main {
         movieSessionService.add(movieSession);
         movieSessionService.findAvailableSessions(movie.getId(), LocalDate.now())
                 .forEach(System.out::println);
+
+        var bob = new User();
+        bob.setEmail("bob@mail.com");
+        bob.setPassword("password");
+        var authenticationService = (AuthenticationService)
+                INJECTOR.getInstance(AuthenticationService.class);
+        authenticationService.register(bob.getEmail(), bob.getPassword());
+        try {
+            authenticationService.login(bob.getEmail(), bob.getPassword());
+        } catch (AuthenticationException e) {
+            e.printStackTrace();
+        }
     }
 }
