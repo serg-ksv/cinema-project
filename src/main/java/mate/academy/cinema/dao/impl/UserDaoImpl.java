@@ -22,8 +22,8 @@ public class UserDaoImpl implements UserDao {
             session = HibernateUtil.getSessionFactory().openSession();
             transaction = session.beginTransaction();
             session.save(user);
-            LOGGER.info("User with id '" + user.getId() + "' was successfully added.");
             transaction.commit();
+            LOGGER.info("User with id '" + user.getId() + "' was successfully added.");
             return user;
         } catch (Exception e) {
             if (transaction != null) {
@@ -45,7 +45,7 @@ public class UserDaoImpl implements UserDao {
             var root = criteriaQuery.from(User.class);
             var predicateEmail = criteriaBuilder.equal(root.get("email"), email);
             criteriaQuery.select(root).where(predicateEmail);
-            return Optional.ofNullable(session.createQuery(criteriaQuery).getSingleResult());
+            return Optional.of(session.createQuery(criteriaQuery).getSingleResult());
         } catch (Exception e) {
             throw new DataProcessingException("Can't retrieve user with email: " + email, e);
         }
