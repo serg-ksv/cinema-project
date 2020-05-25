@@ -45,7 +45,7 @@ public class UserDaoImpl implements UserDao {
             var root = criteriaQuery.from(User.class);
             var predicateEmail = criteriaBuilder.equal(root.get("email"), email);
             criteriaQuery.select(root).where(predicateEmail);
-            return Optional.of(session.createQuery(criteriaQuery).getSingleResult());
+            return Optional.ofNullable(session.createQuery(criteriaQuery).uniqueResult());
         } catch (Exception e) {
             throw new DataProcessingException("Can't retrieve user with email: " + email, e);
         }
