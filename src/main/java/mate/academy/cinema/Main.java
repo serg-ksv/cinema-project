@@ -13,6 +13,7 @@ import mate.academy.cinema.security.AuthenticationService;
 import mate.academy.cinema.service.CinemaHallService;
 import mate.academy.cinema.service.MovieService;
 import mate.academy.cinema.service.MovieSessionService;
+import mate.academy.cinema.service.ShoppingCartService;
 
 public class Main {
     private static final Injector INJECTOR = Injector.getInstance("mate.academy.cinema");
@@ -40,19 +41,33 @@ public class Main {
         var movieSessionService = (MovieSessionService)
                 INJECTOR.getInstance(MovieSessionService.class);
         movieSessionService.add(movieSession);
-        movieSessionService.findAvailableSessions(movie.getId(), LocalDate.now())
-                .forEach(System.out::println);
+        var availableSessions = movieSessionService
+                .findAvailableSessions(movie.getId(), LocalDate.now());
+        availableSessions.forEach(System.out::println);
 
         var bob = new User();
         bob.setEmail("bob@mail.com");
         bob.setPassword("password");
+        var alice = new User();
+        alice.setEmail("alice@mail.com");
+        alice.setPassword("123");
+
         var authenticationService = (AuthenticationService)
                 INJECTOR.getInstance(AuthenticationService.class);
-        authenticationService.register(bob.getEmail(), bob.getPassword());
+        var registeredBob = authenticationService.register(bob.getEmail(), bob.getPassword());
+        var registeredAlice = authenticationService.register(alice.getEmail(), alice.getPassword());
         try {
             authenticationService.login(bob.getEmail(), bob.getPassword());
         } catch (AuthenticationException e) {
             e.printStackTrace();
         }
+
+        var shoppingCartService = (ShoppingCartService)
+                INJECTOR.getInstance(ShoppingCartService.class);
+        var selectedMovieSession = availableSessions.get(0);
+        shoppingCartService.addSession(selectedMovieSession, registeredBob);
+        shoppingCartService.addSession(selectedMovieSession, registeredAlice);
+        System.out.println(shoppingCartService.getByUser(registeredBob));
+        System.out.println(shoppingCartService.getByUser(registeredAlice));
     }
 }
