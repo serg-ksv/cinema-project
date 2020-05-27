@@ -6,37 +6,9 @@ import mate.academy.cinema.exceptions.DataProcessingException;
 import mate.academy.cinema.lib.Dao;
 import mate.academy.cinema.model.User;
 import mate.academy.cinema.util.HibernateUtil;
-import org.apache.log4j.Logger;
-import org.hibernate.Session;
-import org.hibernate.Transaction;
 
 @Dao
-public class UserDaoImpl implements UserDao {
-    private static final Logger LOGGER = Logger.getLogger(UserDaoImpl.class);
-
-    @Override
-    public User add(User user) {
-        Transaction transaction = null;
-        Session session = null;
-        try {
-            session = HibernateUtil.getSessionFactory().openSession();
-            transaction = session.beginTransaction();
-            session.save(user);
-            transaction.commit();
-            LOGGER.info("User with id '" + user.getId() + "' was successfully added.");
-            return user;
-        } catch (Exception e) {
-            if (transaction != null) {
-                transaction.rollback();
-            }
-            throw new DataProcessingException("Can't insert user entity", e);
-        } finally {
-            if (session != null) {
-                session.close();
-            }
-        }
-    }
-
+public class UserDaoImpl extends GenericDaoImpl<User> implements UserDao {
     @Override
     public Optional<User> findByEmail(String email) {
         try (var session = HibernateUtil.getSessionFactory().openSession()) {
