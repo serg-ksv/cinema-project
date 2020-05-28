@@ -7,39 +7,9 @@ import mate.academy.cinema.exceptions.DataProcessingException;
 import mate.academy.cinema.lib.Dao;
 import mate.academy.cinema.model.MovieSession;
 import mate.academy.cinema.util.HibernateUtil;
-import org.apache.log4j.Logger;
-import org.hibernate.Session;
-import org.hibernate.Transaction;
 
 @Dao
-public class MovieSessionDaoImpl implements MovieSessionDao {
-    private static final Logger LOGGER = Logger.getLogger(MovieSessionDaoImpl.class);
-
-    @Override
-    public MovieSession add(MovieSession movieSession) {
-        Transaction transaction = null;
-        Session session = null;
-        try {
-            session = HibernateUtil.getSessionFactory().openSession();
-            transaction = session.beginTransaction();
-            session.save(movieSession);
-            transaction.commit();
-            LOGGER.info("A session of the movie '" + movieSession.getMovie().getTitle()
-                    + " in hall '" + movieSession.getCinemaHall() + "'"
-                    + " was successfully created.");
-            return movieSession;
-        } catch (Exception e) {
-            if (transaction != null) {
-                transaction.rollback();
-            }
-            throw new DataProcessingException("Can't add movie session", e);
-        } finally {
-            if (session != null) {
-                session.close();
-            }
-        }
-    }
-
+public class MovieSessionDaoImpl extends GenericDaoImpl<MovieSession> implements MovieSessionDao {
     @Override
     public List<MovieSession> findAvailableSessions(Long movieId, LocalDate date) {
         try (var session = HibernateUtil.getSessionFactory().openSession()) {

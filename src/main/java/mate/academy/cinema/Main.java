@@ -13,6 +13,7 @@ import mate.academy.cinema.security.AuthenticationService;
 import mate.academy.cinema.service.CinemaHallService;
 import mate.academy.cinema.service.MovieService;
 import mate.academy.cinema.service.MovieSessionService;
+import mate.academy.cinema.service.OrderService;
 import mate.academy.cinema.service.ShoppingCartService;
 
 public class Main {
@@ -67,7 +68,12 @@ public class Main {
         var selectedMovieSession = availableSessions.get(0);
         shoppingCartService.addSession(selectedMovieSession, registeredBob);
         shoppingCartService.addSession(selectedMovieSession, registeredAlice);
-        System.out.println(shoppingCartService.getByUser(registeredBob));
-        System.out.println(shoppingCartService.getByUser(registeredAlice));
+        var bobCart = shoppingCartService.getByUser(registeredBob);
+        var aliceCart = shoppingCartService.getByUser(registeredAlice);
+
+        var orderService = (OrderService) INJECTOR.getInstance(OrderService.class);
+        orderService.completeOrder(bobCart.getTickets(), bobCart.getUser());
+        orderService.completeOrder(aliceCart.getTickets(), aliceCart.getUser());
+        orderService.getOrderHistory(bobCart.getUser()).forEach(System.out::println);
     }
 }
