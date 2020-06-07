@@ -2,16 +2,22 @@ package mate.academy.cinema.dao.impl;
 
 import mate.academy.cinema.dao.GenericDao;
 import mate.academy.cinema.exceptions.DataProcessingException;
-import mate.academy.cinema.util.HibernateUtil;
 import org.hibernate.Session;
+import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 
 public abstract class GenericDaoImpl<T> implements GenericDao<T> {
+    private final SessionFactory sessionFactory;
+
+    public GenericDaoImpl(SessionFactory sessionFactory) {
+        this.sessionFactory = sessionFactory;
+    }
+
     public T add(T element) {
         Transaction transaction = null;
         Session session = null;
         try {
-            session = HibernateUtil.getSessionFactory().openSession();
+            session = sessionFactory.openSession();
             transaction = session.beginTransaction();
             session.save(element);
             transaction.commit();
