@@ -2,21 +2,30 @@ package mate.academy.cinema.dao.impl;
 
 import mate.academy.cinema.dao.ShoppingCartDao;
 import mate.academy.cinema.exceptions.DataProcessingException;
-import mate.academy.cinema.lib.Dao;
 import mate.academy.cinema.model.ShoppingCart;
 import mate.academy.cinema.model.User;
-import mate.academy.cinema.util.HibernateUtil;
 import org.hibernate.Session;
+import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
 
-@Dao
+@Repository
 public class ShoppingCartDaoImpl extends GenericDaoImpl<ShoppingCart> implements ShoppingCartDao {
+    private final SessionFactory sessionFactory;
+
+    @Autowired
+    public ShoppingCartDaoImpl(SessionFactory sessionFactory) {
+        super(sessionFactory);
+        this.sessionFactory = sessionFactory;
+    }
+
     @Override
     public ShoppingCart getByUser(User user) {
-        try (var session = HibernateUtil.getSessionFactory().openSession()) {
-            var query = session.createQuery("from ShoppingCart sc "
-                                            + "left join fetch sc.tickets "
-                                            + "where sc.user = :user", ShoppingCart.class);
+        try (var session = sessionFactory.openSession()) {
+            var query = session.createQuery("FROM ShoppingCart SC "
+                                            + "LEFT JOIN FETCH SC.tickets "
+                                            + "WHERE SC.user = :user", ShoppingCart.class);
             query.setParameter("user", user);
             return query.uniqueResult();
         } catch (Exception e) {
@@ -29,7 +38,7 @@ public class ShoppingCartDaoImpl extends GenericDaoImpl<ShoppingCart> implements
         Transaction transaction = null;
         Session session = null;
         try {
-            session = HibernateUtil.getSessionFactory().openSession();
+            session = sessionFactory.openSession();
             transaction = session.beginTransaction();
             session.update(shoppingCart);
             transaction.commit();

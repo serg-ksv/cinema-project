@@ -1,22 +1,28 @@
 package mate.academy.cinema.dao.impl;
 
 import java.util.List;
-import javax.persistence.criteria.CriteriaQuery;
 import mate.academy.cinema.dao.MovieDao;
 import mate.academy.cinema.exceptions.DataProcessingException;
-import mate.academy.cinema.lib.Dao;
 import mate.academy.cinema.model.Movie;
-import mate.academy.cinema.util.HibernateUtil;
+import org.hibernate.SessionFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
 
-@Dao
+@Repository
 public class MovieDaoImpl extends GenericDaoImpl<Movie> implements MovieDao {
+    private final SessionFactory sessionFactory;
+
+    @Autowired
+    public MovieDaoImpl(SessionFactory sessionFactory) {
+        super(sessionFactory);
+        this.sessionFactory = sessionFactory;
+    }
+
     @Override
     public List<Movie> getAll() {
-        try (var session = HibernateUtil.getSessionFactory().openSession()) {
-            CriteriaQuery<Movie> criteriaQuery = session.getCriteriaBuilder()
-                    .createQuery(Movie.class);
-            criteriaQuery.from(Movie.class);
-            return session.createQuery(criteriaQuery).getResultList();
+        try (var session = sessionFactory.openSession()) {
+            var query = session.createQuery("FROM Movie", Movie.class);
+            return query.list();
         } catch (Exception e) {
             throw new DataProcessingException("Error retrieving all movies. ", e);
         }
