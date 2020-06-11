@@ -6,14 +6,12 @@ import mate.academy.cinema.exceptions.DataProcessingException;
 import mate.academy.cinema.model.Order;
 import mate.academy.cinema.model.User;
 import org.hibernate.SessionFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 @Repository
 public class OrderDaoImpl extends GenericDaoImpl<Order> implements OrderDao {
     private final SessionFactory sessionFactory;
 
-    @Autowired
     public OrderDaoImpl(SessionFactory sessionFactory) {
         super(sessionFactory);
         this.sessionFactory = sessionFactory;
