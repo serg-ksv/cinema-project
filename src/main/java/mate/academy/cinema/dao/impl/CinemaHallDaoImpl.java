@@ -5,17 +5,26 @@ import mate.academy.cinema.dao.CinemaHallDao;
 import mate.academy.cinema.exceptions.DataProcessingException;
 import mate.academy.cinema.model.CinemaHall;
 import org.hibernate.SessionFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 @Repository
 public class CinemaHallDaoImpl extends GenericDaoImpl<CinemaHall> implements CinemaHallDao {
     private final SessionFactory sessionFactory;
 
-    @Autowired
     public CinemaHallDaoImpl(SessionFactory sessionFactory) {
         super(sessionFactory);
         this.sessionFactory = sessionFactory;
+    }
+
+    @Override
+    public CinemaHall getById(Long id) {
+        try (var session = sessionFactory.openSession()) {
+            var query = session.createQuery("FROM CinemaHall WHERE id = :id", CinemaHall.class);
+            query.setParameter("id", id);
+            return query.uniqueResult();
+        } catch (Exception e) {
+            throw new DataProcessingException("Can't retrieve cinema hall", e);
+        }
     }
 
     @Override

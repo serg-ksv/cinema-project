@@ -6,17 +6,26 @@ import mate.academy.cinema.dao.MovieSessionDao;
 import mate.academy.cinema.exceptions.DataProcessingException;
 import mate.academy.cinema.model.MovieSession;
 import org.hibernate.SessionFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 @Repository
 public class MovieSessionDaoImpl extends GenericDaoImpl<MovieSession> implements MovieSessionDao {
     private final SessionFactory sessionFactory;
 
-    @Autowired
     public MovieSessionDaoImpl(SessionFactory sessionFactory) {
         super(sessionFactory);
         this.sessionFactory = sessionFactory;
+    }
+
+    @Override
+    public MovieSession getById(Long id) {
+        try (var session = sessionFactory.openSession()) {
+            var query = session.createQuery("FROM MovieSession WHERE id = :id", MovieSession.class);
+            query.setParameter("id", id);
+            return query.uniqueResult();
+        } catch (Exception e) {
+            throw new DataProcessingException("Can't retrieve movie session by id: " + id, e);
+        }
     }
 
     @Override
