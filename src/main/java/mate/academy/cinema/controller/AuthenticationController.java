@@ -1,5 +1,6 @@
 package mate.academy.cinema.controller;
 
+import javax.validation.Valid;
 import mate.academy.cinema.model.dto.UserRequestDto;
 import mate.academy.cinema.security.AuthenticationService;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -15,7 +16,7 @@ public class AuthenticationController {
     }
 
     @PostMapping("/register")
-    public void register(@RequestBody UserRequestDto requestDto) {
+    public void register(@Valid @RequestBody UserRequestDto requestDto) {
         authenticationService.register(requestDto.getEmail(), requestDto.getPassword());
     }
 }

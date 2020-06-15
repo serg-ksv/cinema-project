@@ -2,6 +2,7 @@ package mate.academy.cinema.controller;
 
 import java.util.List;
 import java.util.stream.Collectors;
+import javax.validation.Valid;
 import mate.academy.cinema.model.dto.MovieRequestDto;
 import mate.academy.cinema.model.dto.MovieResponseDto;
 import mate.academy.cinema.model.mapper.MovieMapper;
@@ -24,7 +25,7 @@ public class MovieController {
     }
 
     @PostMapping
-    public void add(@RequestBody MovieRequestDto requestDto) {
+    public void add(@Valid @RequestBody MovieRequestDto requestDto) {
         movieService.add(movieMapper.getMovieFromDto(requestDto));
     }
 
