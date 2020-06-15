@@ -3,10 +3,8 @@ package mate.academy.cinema.model.dto;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
 
 public class CinemaHallRequestDto {
-    @NotNull(message = "Capacity can't be null!")
     @Min(50)
     @Max(400)
     private int capacity;
