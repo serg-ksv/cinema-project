@@ -3,13 +3,9 @@ package mate.academy.cinema.model.dto;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 import mate.academy.cinema.security.EmailConstraint;
-import mate.academy.cinema.security.FieldsValueMatch;
+import mate.academy.cinema.security.PasswordsMatch;
 
-@FieldsValueMatch(
-        field = "password",
-        fieldMatch = "repeatPassword",
-        message = "Passwords do not match!"
-)
+@PasswordsMatch
 public class UserRequestDto {
     @EmailConstraint
     @Size(min = 8, max = 40)
