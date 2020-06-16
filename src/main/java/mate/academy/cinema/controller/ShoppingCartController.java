@@ -5,6 +5,7 @@ import mate.academy.cinema.model.mapper.ShoppingCartMapper;
 import mate.academy.cinema.service.MovieSessionService;
 import mate.academy.cinema.service.ShoppingCartService;
 import mate.academy.cinema.service.UserService;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -30,16 +31,17 @@ public class ShoppingCartController {
     }
 
     @PostMapping("/add-movie-session")
-    public void addMovieSession(@RequestParam Long userId,
+    public void addMovieSession(Authentication authentication,
                                 @RequestParam Long movieSessionId) {
         var movieSession = movieSessionService.getById(movieSessionId);
-        var user = userService.getById(userId);
+        var user = userService.findByEmail(authentication.getName());
         shoppingCartService.addSession(movieSession, user);
     }
 
     @GetMapping("/by-user")
-    public ShoppingCartResponseDto getByUser(@RequestParam Long userId) {
-        var shoppingCart = shoppingCartService.getByUser(userService.getById(userId));
+    public ShoppingCartResponseDto getByUser(Authentication authentication) {
+        var user = userService.findByEmail(authentication.getName());
+        var shoppingCart = shoppingCartService.getByUser(user);
         return shoppingCartMapper.getDtoFromShoppingCart(shoppingCart);
     }
 }

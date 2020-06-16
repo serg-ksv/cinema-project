@@ -2,6 +2,7 @@ package mate.academy.cinema.controller;
 
 import java.util.List;
 import java.util.stream.Collectors;
+import javax.validation.Valid;
 import mate.academy.cinema.model.dto.CinemaHallRequestDto;
 import mate.academy.cinema.model.dto.CinemaHallResponseDto;
 import mate.academy.cinema.model.mapper.CinemaHallMapper;
@@ -25,7 +26,7 @@ public class CinemaHallController {
     }
 
     @PostMapping
-    public void add(@RequestBody CinemaHallRequestDto requestDto) {
+    public void add(@Valid @RequestBody CinemaHallRequestDto requestDto) {
         cinemaHallService.add(cinemaHallMapper.getCinemaHallFromDto(requestDto));
     }
 

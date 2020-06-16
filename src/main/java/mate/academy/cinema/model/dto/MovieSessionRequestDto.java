@@ -1,10 +1,14 @@
 package mate.academy.cinema.model.dto;
 
 import java.time.LocalDateTime;
+import javax.validation.constraints.NotNull;
 
 public class MovieSessionRequestDto {
+    @NotNull(message = "Field movieId can't be null")
     private Long movieId;
+    @NotNull(message = "Field cinemaHallId can't be null")
     private Long cinemaHallId;
+    @NotNull(message = "Field showTime can't be null")
     private LocalDateTime showTime;
 
     public Long getMovieId() {
