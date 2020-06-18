@@ -32,7 +32,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     @Override
     public User login(String email, String password) throws AuthenticationException {
         var user = userService.findByEmail(email);
-        if (user.getPassword().equals(passwordEncoder.encode(password))) {
+        if (user != null && passwordEncoder.matches(password, user.getPassword())) {
             LOGGER.info("User with email '" + user.getEmail() + "' successfully logged in.");
             return user;
         }
@@ -44,8 +44,8 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         var user = new User();
         user.setEmail(email);
         user.setPassword(passwordEncoder.encode(password));
-        var role = roleService.getRoleByName("USER");
-        user.setRoles(Set.of(role));
+        var userRole = roleService.getRoleByName("USER");
+        user.setRoles(Set.of(userRole));
         userService.add(user);
         shoppingCartService.registerNewShoppingCart(user);
         return user;
