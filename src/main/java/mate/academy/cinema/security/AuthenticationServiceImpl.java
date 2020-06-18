@@ -1,33 +1,38 @@
 package mate.academy.cinema.security;
 
+import java.util.Set;
 import mate.academy.cinema.dao.impl.UserDaoImpl;
 import mate.academy.cinema.exceptions.AuthenticationException;
 import mate.academy.cinema.model.User;
+import mate.academy.cinema.service.RoleService;
 import mate.academy.cinema.service.ShoppingCartService;
 import mate.academy.cinema.service.UserService;
-import mate.academy.cinema.util.HashUtil;
 import org.apache.log4j.Logger;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
 public class AuthenticationServiceImpl implements AuthenticationService {
     private static final Logger LOGGER = Logger.getLogger(UserDaoImpl.class);
-    private final HashUtil hashUtil;
     private final UserService userService;
     private final ShoppingCartService shoppingCartService;
+    private final RoleService roleService;
+    private final PasswordEncoder passwordEncoder;
 
-    public AuthenticationServiceImpl(HashUtil hashUtil, UserService userService,
-                                     ShoppingCartService shoppingCartService) {
-        this.hashUtil = hashUtil;
+    public AuthenticationServiceImpl(UserService userService,
+                                     ShoppingCartService shoppingCartService,
+                                     RoleService roleService,
+                                     PasswordEncoder passwordEncoder) {
         this.userService = userService;
         this.shoppingCartService = shoppingCartService;
+        this.roleService = roleService;
+        this.passwordEncoder = passwordEncoder;
     }
 
     @Override
     public User login(String email, String password) throws AuthenticationException {
         var user = userService.findByEmail(email);
-        var hashPassword = hashUtil.hashPassword(password, user.getSalt());
-        if (user.getPassword().equals(hashPassword)) {
+        if (user.getPassword().equals(passwordEncoder.encode(password))) {
             LOGGER.info("User with email '" + user.getEmail() + "' successfully logged in.");
             return user;
         }
@@ -36,12 +41,11 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
     @Override
     public User register(String email, String password) {
-        byte[] salt = hashUtil.getSalt();
-        var hashPassword = hashUtil.hashPassword(password, salt);
         var user = new User();
         user.setEmail(email);
-        user.setPassword(hashPassword);
-        user.setSalt(salt);
+        user.setPassword(passwordEncoder.encode(password));
+        var role = roleService.getRoleByName("USER");
+        user.setRoles(Set.of(role));
         userService.add(user);
         shoppingCartService.registerNewShoppingCart(user);
         return user;
