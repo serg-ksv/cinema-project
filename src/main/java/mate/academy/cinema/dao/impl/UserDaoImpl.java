@@ -30,7 +30,9 @@ public class UserDaoImpl extends GenericDaoImpl<User> implements UserDao {
     @Override
     public Optional<User> findByEmail(String email) {
         try (var session = sessionFactory.openSession()) {
-            var query = session.createQuery("FROM User WHERE email = :email", User.class);
+            var query = session.createQuery("FROM User U "
+                                            + "LEFT JOIN FETCH U.roles "
+                                            + "WHERE U.email = :email", User.class);
             query.setParameter("email", email);
             return Optional.ofNullable(query.uniqueResult());
         } catch (Exception e) {
