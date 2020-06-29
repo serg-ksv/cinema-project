@@ -29,4 +29,9 @@ public class OrderDaoImpl extends GenericDaoImpl<Order> implements OrderDao {
             throw new DataProcessingException("Can't retrieve order", e);
         }
     }
+
+    @Override
+    public Order getById(Long id) {
+        return super.getById(id, Order.class);
+    }
 }

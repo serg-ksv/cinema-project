@@ -19,17 +19,11 @@ public class MovieSessionDaoImpl extends GenericDaoImpl<MovieSession> implements
 
     @Override
     public MovieSession getById(Long id) {
-        try (var session = sessionFactory.openSession()) {
-            var query = session.createQuery("FROM MovieSession WHERE id = :id", MovieSession.class);
-            query.setParameter("id", id);
-            return query.uniqueResult();
-        } catch (Exception e) {
-            throw new DataProcessingException("Can't retrieve movie session by id: " + id, e);
-        }
+        return super.getById(id, MovieSession.class);
     }
 
     @Override
-    public List<MovieSession> findAvailableSessions(Long movieId, LocalDate date) {
+    public List<MovieSession> getAvailableSessions(Long movieId, LocalDate date) {
         try (var session = sessionFactory.openSession()) {
             var query = session.createQuery("FROM MovieSession "
                                             + "WHERE movie.id = :movieId "

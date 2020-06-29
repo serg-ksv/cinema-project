@@ -33,4 +33,12 @@ public abstract class GenericDaoImpl<T> implements GenericDao<T> {
             }
         }
     }
+
+    public T getById(Long id, Class<T> type) {
+        try (var session = sessionFactory.openSession()) {
+            return session.get(type, id);
+        } catch (Exception e) {
+            throw new DataProcessingException("Can't retrieve " + type.getSimpleName(), e);
+        }
+    }
 }

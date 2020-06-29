@@ -18,13 +18,7 @@ public class CinemaHallDaoImpl extends GenericDaoImpl<CinemaHall> implements Cin
 
     @Override
     public CinemaHall getById(Long id) {
-        try (var session = sessionFactory.openSession()) {
-            var query = session.createQuery("FROM CinemaHall WHERE id = :id", CinemaHall.class);
-            query.setParameter("id", id);
-            return query.uniqueResult();
-        } catch (Exception e) {
-            throw new DataProcessingException("Can't retrieve cinema hall", e);
-        }
+        return super.getById(id, CinemaHall.class);
     }
 
     @Override

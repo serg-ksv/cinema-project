@@ -31,7 +31,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
     @Override
     public User login(String email, String password) throws AuthenticationException {
-        var user = userService.findByEmail(email);
+        var user = userService.getByEmail(email);
         if (user != null && passwordEncoder.matches(password, user.getPassword())) {
             LOGGER.info("User with email '" + user.getEmail() + "' successfully logged in.");
             return user;
