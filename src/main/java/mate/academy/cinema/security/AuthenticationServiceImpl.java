@@ -1,19 +1,15 @@
 package mate.academy.cinema.security;
 
 import java.util.Set;
-import mate.academy.cinema.dao.impl.UserDaoImpl;
-import mate.academy.cinema.exceptions.AuthenticationException;
 import mate.academy.cinema.model.User;
 import mate.academy.cinema.service.RoleService;
 import mate.academy.cinema.service.ShoppingCartService;
 import mate.academy.cinema.service.UserService;
-import org.apache.log4j.Logger;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
 public class AuthenticationServiceImpl implements AuthenticationService {
-    private static final Logger LOGGER = Logger.getLogger(UserDaoImpl.class);
     private final UserService userService;
     private final ShoppingCartService shoppingCartService;
     private final RoleService roleService;
@@ -27,16 +23,6 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         this.shoppingCartService = shoppingCartService;
         this.roleService = roleService;
         this.passwordEncoder = passwordEncoder;
-    }
-
-    @Override
-    public User login(String email, String password) throws AuthenticationException {
-        var user = userService.getByEmail(email);
-        if (user != null && passwordEncoder.matches(password, user.getPassword())) {
-            LOGGER.info("User with email '" + user.getEmail() + "' successfully logged in.");
-            return user;
-        }
-        throw new AuthenticationException("Incorrect email or password.");
     }
 
     @Override
