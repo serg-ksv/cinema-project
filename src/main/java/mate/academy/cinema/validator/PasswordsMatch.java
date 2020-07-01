@@ -1,4 +1,4 @@
-package mate.academy.cinema.security;
+package mate.academy.cinema.validator;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
