@@ -18,13 +18,7 @@ public class MovieDaoImpl extends GenericDaoImpl<Movie> implements MovieDao {
 
     @Override
     public Movie getById(Long id) {
-        try (var session = sessionFactory.openSession()) {
-            var query = session.createQuery("FROM Movie WHERE id = :id", Movie.class);
-            query.setParameter("id", id);
-            return query.uniqueResult();
-        } catch (Exception e) {
-            throw new DataProcessingException("Can't retrieve movie. ", e);
-        }
+        return super.getById(id, Movie.class);
     }
 
     @Override

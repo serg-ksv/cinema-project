@@ -8,9 +8,9 @@ import mate.academy.cinema.security.AuthenticationService;
 import mate.academy.cinema.service.RoleService;
 import mate.academy.cinema.service.UserService;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.stereotype.Controller;
+import org.springframework.stereotype.Component;
 
-@Controller
+@Component
 public class InjectDataController {
     private final RoleService roleService;
     private final AuthenticationService authenticationService;

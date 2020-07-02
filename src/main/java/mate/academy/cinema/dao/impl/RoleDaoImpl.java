@@ -25,4 +25,9 @@ public class RoleDaoImpl extends GenericDaoImpl<Role> implements RoleDao {
             throw new DataProcessingException("Can't retrieve role with name: " + roleName, e);
         }
     }
+
+    @Override
+    public Role getById(Long id) {
+        return super.getById(id, Role.class);
+    }
 }

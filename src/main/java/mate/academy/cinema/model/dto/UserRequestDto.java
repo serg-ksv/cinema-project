@@ -2,8 +2,8 @@ package mate.academy.cinema.model.dto;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
-import mate.academy.cinema.security.EmailConstraint;
-import mate.academy.cinema.security.PasswordsMatch;
+import mate.academy.cinema.validator.EmailConstraint;
+import mate.academy.cinema.validator.PasswordsMatch;
 
 @PasswordsMatch
 public class UserRequestDto {

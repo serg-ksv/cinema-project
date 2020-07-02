@@ -1,4 +1,4 @@
-package mate.academy.cinema.security;
+package mate.academy.cinema.validator;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -7,11 +7,11 @@ import java.lang.annotation.Target;
 import javax.validation.Constraint;
 import javax.validation.Payload;
 
-@Constraint(validatedBy = PasswordsMatchValidator.class)
-@Target({ ElementType.TYPE })
+@Constraint(validatedBy = EmailValidator.class)
+@Target({ ElementType.FIELD })
 @Retention(RetentionPolicy.RUNTIME)
-public @interface PasswordsMatch {
-    String message() default "Passwords don't match!";
+public @interface EmailConstraint {
+    String message() default "Invalid email format";
 
     Class<?>[] groups() default {};
 

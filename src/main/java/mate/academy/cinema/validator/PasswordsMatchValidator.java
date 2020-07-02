@@ -1,4 +1,4 @@
-package mate.academy.cinema.security;
+package mate.academy.cinema.validator;
 
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;

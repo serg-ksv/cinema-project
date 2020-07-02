@@ -31,14 +31,14 @@ public class OrderController {
 
     @PostMapping("/complete")
     public void completeOrder(Authentication authentication) {
-        var user = userService.findByEmail(authentication.getName());
+        var user = userService.getByEmail(authentication.getName());
         var tickets = shoppingCartService.getByUser(user).getTickets();
         orderService.completeOrder(tickets, user);
     }
 
     @GetMapping
     public List<OrderResponseDto> getOrdersHistory(Authentication authentication) {
-        var user = userService.findByEmail(authentication.getName());
+        var user = userService.getByEmail(authentication.getName());
         return orderService.getOrderHistory(user).stream()
                 .map(orderMapper::getDtoFromOrder)
                 .collect(Collectors.toList());

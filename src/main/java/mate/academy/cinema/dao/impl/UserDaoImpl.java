@@ -18,17 +18,11 @@ public class UserDaoImpl extends GenericDaoImpl<User> implements UserDao {
 
     @Override
     public User getById(Long id) {
-        try (var session = sessionFactory.openSession()) {
-            var query = session.createQuery("FROM User WHERE id = :id", User.class);
-            query.setParameter("id", id);
-            return query.uniqueResult();
-        } catch (Exception e) {
-            throw new DataProcessingException("Can't retrieve user by id: " + id, e);
-        }
+        return super.getById(id, User.class);
     }
 
     @Override
-    public Optional<User> findByEmail(String email) {
+    public Optional<User> getByEmail(String email) {
         try (var session = sessionFactory.openSession()) {
             var query = session.createQuery("FROM User U "
                                             + "LEFT JOIN FETCH U.roles "
